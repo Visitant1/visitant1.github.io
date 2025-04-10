@@ -59,6 +59,30 @@
       color: #b92d69;
     }
 
+    .alerta {
+      display: flex;
+      align-items: center;
+      background: #fff4f4;
+      color: #8b1e3f;
+      padding: 15px;
+      border-left: 6px solid #b92d69;
+      border-radius: 8px;
+      font-size: 0.95em;
+      margin-bottom: 25px;
+    }
+
+    .alerta i {
+      font-size: 1.3em;
+      margin-right: 10px;
+    }
+
+    small.erro {
+      color: #b92d69;
+      font-size: 0.85em;
+      margin-top: 4px;
+      display: none;
+    }
+
     .btn {
       margin-top: 30px;
       background-color: #6d1d45;
@@ -85,6 +109,12 @@
 
   <div class="container">
     <h2>Endereço de Entrega</h2>
+
+    <div class="alerta">
+      <i class="fas fa-info-circle"></i>
+      Insira os dados de envio corretos para não haver problemas com sua entrega.
+    </div>
+
     <form id="formEntrega">
       <label><i class="fas fa-map-marker-alt"></i> Endereço</label>
       <input type="text" name="endereco" placeholder="Rua, Avenida..." required />
@@ -105,7 +135,8 @@
       <input type="text" name="estado" placeholder="UF" maxlength="2" required />
 
       <label><i class="fas fa-envelope"></i> CEP</label>
-      <input type="text" name="cep" placeholder="00000-000" required />
+      <input type="text" name="cep" id="cep" placeholder="00000-000" required />
+      <small id="cep-erro" class="erro">CEP inválido</small>
 
       <button type="submit" class="btn"><i class="fas fa-check-circle"></i> Continuar</button>
     </form>
@@ -118,7 +149,10 @@
       const formData = new FormData(this);
       const endereco = {};
       let valido = true;
-      let mensagensErro = [];
+
+      const cepErroEl = document.getElementById('cep-erro');
+      cepErroEl.style.display = 'none';
+      cepErroEl.textContent = '';
 
       formData.forEach((value, key) => {
         endereco[key] = value.trim();
@@ -129,35 +163,29 @@
       const cepValido = /^[0-9]{5}-[0-9]{3}$/;
       const estadoValido = /^[A-Z]{2}$/i;
 
+      if (!cepValido.test(endereco.cep)) {
+        valido = false;
+        cepErroEl.textContent = "CEP inválido. Use o formato 00000-000.";
+        cepErroEl.style.display = 'block';
+      }
+
       if (!somenteTexto.test(endereco.cidade)) {
         valido = false;
-        mensagensErro.push("Cidade deve conter apenas letras.");
       }
 
       if (!somenteTexto.test(endereco.bairro)) {
         valido = false;
-        mensagensErro.push("Bairro deve conter apenas letras.");
       }
 
       if (!estadoValido.test(endereco.estado)) {
         valido = false;
-        mensagensErro.push("Estado deve conter 2 letras (UF).");
-      }
-
-      if (!cepValido.test(endereco.cep)) {
-        valido = false;
-        mensagensErro.push("CEP inválido. Use o formato 00000-000.");
       }
 
       if (!somenteNumero.test(endereco.numero)) {
         valido = false;
-        mensagensErro.push("Número deve conter apenas dígitos.");
       }
 
-      if (!valido) {
-        alert(mensagensErro.join('\n'));
-        return;
-      }
+      if (!valido) return;
 
       const enderecos = JSON.parse(localStorage.getItem('enderecos')) || [];
       enderecos.push(endereco);
