@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Informações de Entrega</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;900&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #faf4f2;
+      margin: 0;
+      padding: 0;
+      color: #4a4a4a;
+    }
+
+    header {
+      background: linear-gradient(90deg, #6d1d45, #b92d69);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #6d1d45;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    form label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      font-size: 0.95em;
+    }
+
+    form input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    form i {
+      margin-right: 8px;
+      color: #b92d69;
+    }
+
+    .btn {
+      margin-top: 30px;
+      background-color: #6d1d45;
+      color: white;
+      padding: 15px;
+      width: 100%;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #b92d69;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-truck"></i> Informações de Entrega</h1>
+  </header>
+
+  <div class="container">
+    <h2>Endereço de Entrega</h2>
+    <form id="formEntrega">
+      <label><i class="fas fa-map-marker-alt"></i> Endereço</label>
+      <input type="text" name="endereco" placeholder="Rua, Avenida..." required />
+
+      <label><i class="fas fa-hashtag"></i> Número</label>
+      <input type="text" name="numero" placeholder="Ex: 123" required />
+
+      <label><i class="fas fa-building"></i> Complemento</label>
+      <input type="text" name="complemento" placeholder="Apartamento, bloco, etc" />
+
+      <label><i class="fas fa-city"></i> Bairro</label>
+      <input type="text" name="bairro" placeholder="Bairro" required />
+
+      <label><i class="fas fa-map"></i> Cidade</label>
+      <input type="text" name="cidade" placeholder="Cidade" required />
+
+      <label><i class="fas fa-flag"></i> Estado</label>
+      <input type="text" name="estado" placeholder="UF" maxlength="2" required />
+
+      <label><i class="fas fa-envelope"></i> CEP</label>
+      <input type="text" name="cep" placeholder="00000-000" required />
+
+      <button type="submit" class="btn"><i class="fas fa-check-circle"></i> Continuar</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('formEntrega').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const endereco = {};
+      let valido = true;
+      let mensagensErro = [];
+
+      formData.forEach((value, key) => {
+        endereco[key] = value.trim();
+      });
+
+      const somenteTexto = /^[A-Za-zÀ-ÿ\s]+$/;
+      const somenteNumero = /^[0-9]+$/;
+      const cepValido = /^[0-9]{5}-[0-9]{3}$/;
+      const estadoValido = /^[A-Z]{2}$/i;
+
+      if (!somenteTexto.test(endereco.cidade)) {
+        valido = false;
+        mensagensErro.push("Cidade deve conter apenas letras.");
+      }
+
+      if (!somenteTexto.test(endereco.bairro)) {
+        valido = false;
+        mensagensErro.push("Bairro deve conter apenas letras.");
+      }
+
+      if (!estadoValido.test(endereco.estado)) {
+        valido = false;
+        mensagensErro.push("Estado deve conter 2 letras (UF).");
+      }
+
+      if (!cepValido.test(endereco.cep)) {
+        valido = false;
+        mensagensErro.push("CEP inválido. Use o formato 00000-000.");
+      }
+
+      if (!somenteNumero.test(endereco.numero)) {
+        valido = false;
+        mensagensErro.push("Número deve conter apenas dígitos.");
+      }
+
+      if (!valido) {
+        alert(mensagensErro.join('\n'));
+        return;
+      }
+
+      const enderecos = JSON.parse(localStorage.getItem('enderecos')) || [];
+      enderecos.push(endereco);
+      localStorage.setItem('enderecos', JSON.stringify(enderecos));
+
+      window.location.href = 'enderecos.html';
+    });
+  </script>
+</body>
+</html>

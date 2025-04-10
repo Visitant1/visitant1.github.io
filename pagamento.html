@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirmação de Pagamento | O Boticário</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --verde-boticario: #007d55;
+      --verde-claro: #cfe8dd;
+      --verde-escuro: #005b3d;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5fdf9;
+      text-align: center;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(90deg, var(--verde-escuro), var(--verde-boticario));
+      padding: 35px 0;
+      color: white;
+    }
+
+    header i {
+      margin-right: 10px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #fff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      color: var(--verde-escuro);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 1.05em;
+      line-height: 1.6;
+    }
+
+    .pix-box {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: var(--verde-claro);
+      border-left: 6px solid var(--verde-boticario);
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .pix-box i {
+      color: var(--verde-boticario);
+      margin-right: 8px;
+    }
+
+    .pix-key {
+      font-weight: bold;
+      font-size: 1.1em;
+      word-wrap: break-word;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px dashed var(--verde-boticario);
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    .btn-copiar {
+      background-color: var(--verde-boticario);
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-copiar:hover {
+      background-color: var(--verde-escuro);
+    }
+
+    #timer {
+      font-size: 1.3em;
+      color: var(--verde-boticario);
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    #timer i {
+      margin-right: 8px;
+    }
+
+    .alerta {
+      font-size: 0.95em;
+      color: #a83250;
+      margin-top: 10px;
+    }
+
+    .selos {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      opacity: 0.8;
+    }
+
+    .selo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    .selo i {
+      font-size: 2em;
+      margin-bottom: 8px;
+      color: var(--verde-boticario);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-credit-card"></i>Finalize seu pagamento</h1>
+  </header>
+
+  <div class="container">
+    <h2><i class="fas fa-money-bill-wave"></i> Pagamento via PIX</h2>
+    <p>Para garantir sua compra, copie e cole a chave PIX abaixo no aplicativo do seu banco dentro do tempo limite.</p>
+
+    <div id="timer"><i class="fas fa-clock"></i>Tempo restante para pagamento: 05:00</div>
+    <div class="alerta"><i class="fas fa-exclamation-triangle"></i> Após esse tempo, seu pedido será automaticamente cancelado.</div>
+
+    <div class="pix-box">
+      <p><i class="fas fa-key"></i><strong>Chave PIX:</strong></p>
+      <div class="pix-key" id="pixKey">3bf59dbc-c1b1-4a11-b0fa-37afc7665a41</div>
+      <button onclick="copiarChavePix()" class="btn-copiar"><i class="fas fa-copy"></i> Copiar chave</button>
+      <p><i class="fas fa-mobile-alt"></i>Copie e cole a chave no app do seu banco para concluir a transação.</p>
+    </div>
+
+    <div class="selos">
+      <div class="selo">
+        <i class="fas fa-lock"></i>
+        <span>Site 100% Seguro</span>
+      </div>
+      <div class="selo">
+        <i class="fas fa-shield-alt"></i>
+        <span>Proteção de Dados</span>
+      </div>
+      <div class="selo">
+        <i class="fas fa-piggy-bank"></i>
+        <span>Pagamento Rápido e Fácil</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let timeLeft = 5 * 60;
+    const timerElement = document.getElementById("timer");
+
+    const countdown = setInterval(() => {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerElement.innerHTML = `<i class="fas fa-clock"></i>Tempo restante para pagamento: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        timerElement.innerHTML = "<i class='fas fa-times-circle'></i> Tempo expirado! O pedido foi cancelado.";
+      }
+
+      timeLeft--;
+    }, 1000);
+
+    function copiarChavePix() {
+      const chave = document.getElementById("pixKey").innerText;
+      navigator.clipboard.writeText(chave).then(() => {
+        alert("Chave PIX copiada com sucesso!");
+      }).catch(() => {
+        alert("Não foi possível copiar a chave. Copie manualmente.");
+      });
+    }
+  </script>
+</body>
+</html>

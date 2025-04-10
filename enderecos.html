@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Endereço Salvo!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;900&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #faf4f2;
+      margin: 0;
+      padding: 0;
+      color: #4a4a4a;
+    }
+
+    header {
+      background: linear-gradient(90deg, #6d1d45, #b92d69);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #6d1d45;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .address-card {
+      background-color: #f9f9f9;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      position: relative;
+    }
+
+    .address-card h3 {
+      margin: 0 0 10px;
+      font-weight: 600;
+    }
+
+    .address-card p {
+      margin: 5px 0;
+    }
+
+    .btn-add {
+      display: block;
+      background-color: #6d1d45;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn-add:hover {
+      background-color: #b92d69;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-map-marked-alt"></i> Endereço Salvo</h1>
+  </header>
+
+  <div class="container">
+    <h2>Último Endereço</h2>
+    <div id="enderecosContainer"></div>
+
+    <a href="pagamento.html" class="btn-add"><i class="fas fa-plus-circle"></i> Salvar Endereço</a>
+  </div>
+
+  <script>
+    const container = document.getElementById('enderecosContainer');
+    const enderecos = JSON.parse(localStorage.getItem('enderecos')) || [];
+
+    if (enderecos.length === 0) {
+      container.innerHTML = '<p>Nenhum endereço salvo ainda.</p>';
+    } else {
+      const endereco = enderecos[enderecos.length - 1]; // Pega o último endereço salvo
+      const card = document.createElement('div');
+      card.className = 'address-card';
+      card.innerHTML = `
+        <h3>Endereço</h3>
+        <p><strong>Endereço:</strong> ${endereco.endereco}, ${endereco.numero}</p>
+        <p><strong>Complemento:</strong> ${endereco.complemento || '-'}</p>
+        <p><strong>Bairro:</strong> ${endereco.bairro}</p>
+        <p><strong>Cidade:</strong> ${endereco.cidade} - ${endereco.estado}</p>
+        <p><strong>CEP:</strong> ${endereco.cep}</p>
+      `;
+      container.appendChild(card);
+    }
+  </script>
+</body>
+</html>
